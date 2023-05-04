@@ -23,7 +23,6 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import PetsIcon from '@mui/icons-material/Pets';
 // Import IconButton and alternative icons
-import IconButton from '@mui/material/IconButton';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports'; // Replace PlayIcon
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople'; // Replace InteractIcon
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'; // Replace Evolv

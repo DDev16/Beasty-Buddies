@@ -3,6 +3,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-image: url("./components/Assets/2637581.webp");
   background-size: fill;
   background-position: center;
 }
