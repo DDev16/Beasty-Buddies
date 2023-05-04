@@ -1,46 +1,85 @@
+/* Import Inter font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
+/* Set font and color for pet names */
 .pet-name {
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: blue;
 }
 
+/* Define styles for primary button */
 .button-primary {
   background-color: #1976d2;
   color: #fff;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
 }
 
+/* Define hover state for primary button */
 .button-primary:hover {
   background-color: #1565c0;
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
 
+/* Define styles for secondary button */
 .button-secondary {
   background-color: #f44336;
   color: #fff;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
 }
 
+/* Define hover state for secondary button */
 .button-secondary:hover {
   background-color: #e53935;
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
 
+/* Define styles for success button */
 .button-success {
   background-color: #4caf50;
   color: #fff;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
 }
 
+/* Define hover state for success button */
 .button-success:hover {
   background-color: #43a047;
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+h2 {
+    
 }

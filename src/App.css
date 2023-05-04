@@ -3,7 +3,14 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-size: fill;
+  background-position: center;
 }
+
+
+
+
+
 
 .App-header {
   margin-top: 3rem;
@@ -26,6 +33,74 @@
   margin-bottom: 0;
 }
 
+/* Gradient background */
+.bg-gradient-to-r {
+}
+
+/* Heading styles */
+h1 {
+  font-size: 5rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+  font-family: Montserrat, sans-serif;
+  margin-bottom: 1rem;
+  word-wrap: break-word;
+}
+
+@media only screen and (max-width: 600px) {
+  h1 {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  span.animate-pulse {
+    font-size: 2rem;
+  }
+  
+  span.animate-bounce {
+    font-size: 3rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    word-wrap: break-word;
+  }
+}
+
+
+
+
+/* Animated text styles */
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+/* Animation keyframes */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+
 
 /* Styling for Row and Col */
 .my-5 {
@@ -37,6 +112,8 @@
 /* Styling for Header */
 .text-center {
   text-align: center;
+    background-size: fill;
+    background-position: center;
 }
 
 .text-primary-900 {
@@ -60,18 +137,94 @@
 
 /* Styling for p */
 .text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  /* Existing styles */
+  font-size: 1.8rem;
+  line-height: 2.6rem;
+  color: #333;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+  font-family: "Open Sans", sans-serif;
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+  /* New styles */
+  display: inline-block; /* This allows the text to be centered horizontally */
+  padding: 0.5rem 1rem; /* This adds some padding to the text to make it stand out */
+  border-radius: 0.5rem; /* This rounds the corners of the text */
+  background-color: #ffed4a; /* This sets the background color to a bright yellow */
+  box-shadow: 0px 5px 15px rgba(255, 237, 74, 0.3); /* This adds a subtle drop shadow to the text */
 }
+
+.text-xl:hover {
+  transform: translateY(-2px); /* This moves the text up slightly on hover for a subtle animation effect */
+  color: #fff; /* This changes the text color to white on hover */
+  background-color: #fbbf24; /* This darkens the background color on hover for more contrast */
+  box-shadow: 0px 5px 20px rgba(251, 191, 36, 0.5); /* This increases the size and opacity of the drop shadow on hover */
+}
+
+
+.text-xl:hover {
+  color: #4B0082;
+  text-decoration: underline;
+  transform: translateX(5px);
+}
+
+.text-xl::selection {
+  color: #fff;
+  background-color: #4B0082;
+  text-shadow: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
 
 /* Styling for Routes */
 .text-gray-500 {
   color: #6b7280;
 }
 
-.mb-5 {
-  margin-bottom: 2.5rem;
+.text-center {
+  text-align: center;
+}
+
+.py-8 {
+  position: relative;
+  background: linear-gradient(90deg, rgba(107,70,193,0.8) 0%, rgba(195,77,205,0.8) 100%);
+  z-index: 1;
+  padding: 1rem;
+}
+
+
+.text-primary-700 {
+  color: #1a202c;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.max-w-xl {
+  max-width: 36rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.mt-8 {
+  margin-top: 2rem;
 }
 
 .header-section {

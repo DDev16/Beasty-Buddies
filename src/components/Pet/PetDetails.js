@@ -14,6 +14,22 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import '../Pet/PetDetails.css';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import MoodIcon from '@mui/icons-material/Mood';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
+import PetsIcon from '@mui/icons-material/Pets';
+// Import IconButton and alternative icons
+import IconButton from '@mui/material/IconButton';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports'; // Replace PlayIcon
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople'; // Replace InteractIcon
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'; // Replace Evolv
+import EditIcon from '@mui/icons-material/Edit';
+
+
 
 const StyledCard = styled(Card)(({ theme }) => ({
   minHeight: '600px',
@@ -31,27 +47,48 @@ const StyledImage = styled('img')({
   boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
   transition: '0.3s',
   '&:hover': {
-    transform: 'scale(1.05)',
-    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.2)',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
   },
 });
-
 
 const StyledCardActions = styled(CardActions)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
 }));
-
 const StyledButton = styled(Button)(({ theme }) => ({
   marginBottom: '8px',
   transition: '0.3s',
+  background: 'linear-gradient(to right, #8e2de2, #4a00e0, #00c6fb)',
+  color: '#fff',
+  fontSize: '1.2rem',
+  borderRadius: '4px',
+  padding: '12px 16px',
+  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+  border: '2px solid #8e2de2',
   '&:hover': {
-    transform: 'scale(1.05)',
+    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
+    transform: 'translateY(-2px)',
+    background: 'linear-gradient(to right, #8e2de2, #4a00e0, #00c6fb)',
+  },
+  '&:active': {
+    boxShadow: 'none',
+    transform: 'translateY(2px)',
+    background: '#8e2de2',
+    border: '2px solid #8e2de2',
+  },
+  '&:focus': {
+    outline: 'none',
   },
 }));
 
-const contractAddress = '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707';
+
+
+
+
+
+
+const contractAddress = '0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E';
 
 const PetDetails = () => {
   const [newName, setNewName] = useState('');
@@ -115,122 +152,211 @@ const PetDetails = () => {
       for (let i = 1; i <= totalSupply; i++) {
         try {
           const owner = await contract.methods.ownerOf(i).call();
-      if (owner === accounts[0]) {
-        ownedTokenIds.push(i);
+          if (owner === accounts[0]) {
+            ownedTokenIds.push(i);
+          }
+        } catch (err) {
+          console.error(err);
+        }
       }
+
+      const petDetails = await Promise.all(
+        ownedTokenIds.map(async (tokenId) => {
+          const details = await contract.methods.getPetDetails(tokenId).call();
+          return { tokenId, ...details };
+        }),
+      );
+
+      setPets(petDetails);
+    };
+
+    fetchPets();
+  }, [contract, accounts]);
+
+  const onInteractClick = async (tokenId, action) => {
+    if (!contract) return;
+
+    try {
+      switch (action) {
+        case 'feed':
+          await contract.methods.feed(tokenId).send({ from: accounts[0] });
+          break;
+        case 'play':
+          await contract.methods.play(tokenId).send({ from: accounts[0] });
+          break;
+        case 'evolve':
+          await contract.methods.evolve(tokenId).send({ from: accounts[0] });
+          break;
+        default:
+          break;
+      }
+
+      // Refresh pet details
+      const updatedPetDetails = await contract.methods.getPetDetails(tokenId).call();
+      const updatedPets = pets.map((pet) => (pet.tokenId === tokenId ? { tokenId, ...updatedPetDetails } : pet));
+      setPets(updatedPets);
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
-  const petDetails = await Promise.all(
-    ownedTokenIds.map(async (tokenId) => {
-      const details = await contract.methods.getPetDetails(tokenId).call();
-      return { tokenId, ...details };
-    }),
-  );
+  return (
+    <Container maxWidth="md">
+      <Typography
+  variant="h3"
+  align="center"
+  gutterBottom
+  sx={{
+    fontFamily: 'Montserrat, sans-serif',
+    fontWeight: 'bold',
+    color: '#f9a828',
+    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)',
+    letterSpacing: '2px',
+    marginTop: {xs: '1rem', sm: '2rem', md: '3rem'},
+    marginBottom: {xs: '1rem', sm: '2rem', md: '3rem'},
+    fontSize: {xs: '2rem', sm: '3rem', md: '4rem'},
+  }}
+>
+  Your Buddies
+</Typography>
 
-  setPets(petDetails);
-};
-
-fetchPets();
-}, [contract, accounts]);
-
-const onInteractClick = async (tokenId, action) => {
-if (!contract) return;
-
-try {
-  switch (action) {
-    case 'feed':
-      await contract.methods.feed(tokenId).send({ from: accounts[0] });
-      break;
-    case 'play':
-      await contract.methods.play(tokenId).send({ from: accounts[0] });
-      break;
-    case 'evolve':
-      await contract.methods.evolve(tokenId).send({ from: accounts[0] });
-      break;
-    default:
-      break;
-  }
-
-  // Refresh pet details
-  const updatedPetDetails = await contract.methods.getPetDetails(tokenId).call();
-  const updatedPets = pets.map((pet) => (pet.tokenId === tokenId ? { tokenId, ...updatedPetDetails } : pet));
-  setPets(updatedPets);
-} catch (err) {
-  console.error(err);
-}
-};
-
-return (
-  <Container maxWidth="md">
-    <Typography variant="h4" align="center" gutterBottom>
-      Your Buddies
-    </Typography>
-    <Grid container spacing={3}>
-      {pets.map((pet) => (
-        <Grid item xs={12} sm={6} md={4} key={pet.tokenId}>
-          <StyledCard>
-            <CardContent>
-              <StyledImage
-                src={getImageUrl(pet.level, pet.id)}
-                alt={`${pet.name}`}
-                width="100%"
-              />
-              <Typography className="pet-name" variant="h5" gutterBottom>
-                {pet.name}
-              </Typography>
-              <Typography>ID: {pet.id}</Typography>
-              <Typography>Birth Time: {pet.birthTime}</Typography>
-              <Typography>Last Interaction: {pet.lastInteraction}</Typography>
-              <Typography>Level: {pet.level}</Typography>
-              <Typography>Happiness: {pet.happiness}</Typography>
-              <Typography>Hunger: {pet.hunger}</Typography>
-              <Typography>XP: {pet.xp}</Typography>
-              <Typography>Element: {pet.element}</Typography>
-              <Typography>HP: {pet.hp}</Typography>
-              <Typography>Power: {pet.power}</Typography>
-            </CardContent>
-            <StyledCardActions>
-              <Box mt={1} mb={1}>
-                <TextField
-                  label="New Name"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
+      <Grid container spacing={3}>
+        {pets.map((pet) => (
+          <Grid item xs={12} sm={6} md={4} key={pet.tokenId}>
+            <StyledCard>
+              <CardContent>
+                <StyledImage
+                  src={getImageUrl(pet.level, pet.id)}
+                  alt={`${pet.name}`}
+                  width="100%"
                 />
+                <Typography
+  variant="h5"
+  gutterBottom
+  sx={{
+    fontFamily: 'Montserrat, sans-serif',
+    fontWeight: 700,
+    marginTop: '2rem',
+    textShadow: '1px 1px 1px #FF0000, 2px 2px 1px #0000FF',
+    WebkitTextStrokeWidth: '1px',
+    WebkitTextStrokeColor: '#FFD700',
+    color: '#333',
+    letterSpacing: '0.1rem',
+    textTransform: 'uppercase',
+    textAlign: 'center'
+  }}
+>
+<PetsIcon sx={{ fontSize: 36, mr: 1 }} />
+  {pet.name}
+</Typography>
+
+
+
+<Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium', mt: 1 }} variant="subtitle1">
+      Pet Details
+ </Typography>
+  <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2 }}>      
+ </Box>
+ <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
+     <CalendarTodayIcon sx={{ fontSize: 36, mr: 1 }} />
+     <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+         DOB: {new Date(pet.birthTime * 1000).toLocaleDateString()}
+     </Typography>
+ </Box>
+ <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
+     <AccessTimeIcon sx={{ fontSize: 36, mr: 1 }} />
+     <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+         Last Interaction: {new Date(pet.lastInteraction * 1000).toLocaleString()}
+     </Typography>
+ </Box>
+ 
+ <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium', mt: 2 }} variant="h2">
+     Stats
+ </Typography>
+<Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2 }}>
+     <EqualizerIcon sx={{ fontSize: 36, mr: 1 }} />
+     <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+         Level: {pet.level} | XP: {pet.xp} | Element: {pet.element} | HP: {pet.hp} | Power: {pet.power}
+     </Typography>
+ </Box>
+ 
+ <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium', mt: 2 }} variant="h3">
+     Needs
+ </Typography>
+ <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2 }}>
+     <SentimentSatisfiedAltIcon sx={{ fontSize: 36, mr: 1 }} />
+     <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+         Happiness: {pet.happiness} <MoodIcon sx={{ fontSize: 16, mb: -1, ml: 1 }} />
+     </Typography>
+ </Box>
+ <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
+     <RestaurantIcon sx={{ fontSize: 36, mr: 1 }} />
+    <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+         Hunger: {pet.hunger} <FastfoodIcon sx={{ fontSize: 16, mb: -1, ml: 1 }} />
+     </Typography>
+ </Box>
+
+
+              </CardContent>
+              <StyledCardActions>
+                <Box mt={1} mb={1}>
+                  <TextField
+                    label="New Name"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    sx={{ width: '100%' }}
+                    InputProps={{ sx: { fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' } }}
+                    InputLabelProps={{ sx: { fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' } }}
+                  />
+                  <StyledButton
+                    onClick={() => onSetNameClick(pet.tokenId)}
+                    sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold', mt: 1 }}
+                  >
+                    Set Name
+                    <EditIcon/>
+                  </StyledButton>
+                </Box>
                 <StyledButton
-                  className="button-primary"
-                  onClick={() => onSetNameClick(pet.tokenId)}
+                  onClick={() => onInteractClick(pet.tokenId, 'feed')}
+                  sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold' }}
                 >
-                  Set Name
+                  Feed
+                  <FastfoodIcon/>
                 </StyledButton>
-              </Box>
-              <StyledButton
-                className="button-primary"
-                onClick={() => onInteractClick(pet.tokenId, 'feed')}
-              >
-                Feed
-              </StyledButton>
-              <StyledButton
-                className="button-secondary"
-                onClick={() => onInteractClick(pet.tokenId, 'play')}
-              >
-                Play
-              </StyledButton>
-              <StyledButton
-                className="button-success"
-                onClick={() => onInteractClick(pet.tokenId, 'evolve')}
-              >
-                Evolve
-              </StyledButton>
-            </StyledCardActions>
-          </StyledCard>
-        </Grid>
-      ))}
-    </Grid>
-  </Container>
-);
+                <StyledButton
+                  onClick={() => onInteractClick(pet.tokenId, 'play')}
+                  sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold' }}
+                >
+                  Play
+                  <SportsEsportsIcon />
+
+                </StyledButton>
+                <StyledButton
+                  
+                  onClick={() => onInteractClick(pet.tokenId, 'interact')}
+                  sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold' }}
+                >
+                  Interact
+                  <EmojiPeopleIcon />
+
+                </StyledButton>
+                <StyledButton
+                  
+                  onClick={() => onInteractClick(pet.tokenId, 'evolve')}
+                  sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold' }}
+                >
+                  Evolve
+                  <AutoFixHighIcon />
+
+                </StyledButton>
+                
+              </StyledCardActions>
+            </StyledCard>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  );
 };
 
 export default PetDetails;

@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import PetAvatar from '../Pet/PetAvatar';
 
 const MAX_SUPPLY = 10000; // Update this value with the correct maximum supply for your contract
 const MAX_MINT_PER_TRANSACTION = 10;
@@ -104,9 +103,28 @@ return (
       mt: 6,
     }}
   >
-    <Typography variant="h2" align="center" gutterBottom>
-      Mint Exclusive Monsters
-    </Typography>
+   <Typography
+  variant="h2"
+  align="center"
+  gutterBottom
+  sx={{
+    fontFamily: 'Montserrat, sans-serif',
+    fontWeight: 'bold',
+    color: '#f9a828',
+    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)',
+    letterSpacing: '2px',
+    marginTop: {xs: '1rem', sm: '2rem', md: '3rem'},
+    marginBottom: {xs: '1rem', sm: '2rem', md: '3rem'},
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    fontSize: {xs: '3rem', sm: '4rem', md: '5rem'},
+  }}
+>
+  Mint Your Battle Buddy! 
+</Typography>
+
+
     <Box sx={{ mb: 4, width: '100%', textAlign: 'center' }}>
     </Box>
     <Typography variant="body1" align="center" gutterBottom sx={{ mb: 4 }}>
