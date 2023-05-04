@@ -1,0 +1,47 @@
+<Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium', mt: 1 }} variant="subtitle1">
+      Pet Details
+ </Typography>
+  <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2 }}>
+     <PetsIcon sx={{ fontSize: 36, mr: 1 }} />
+      <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+          Pet Name: <strong>{pet.name}</strong>
+     </Typography>
+ </Box>
+ <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
+     <CalendarTodayIcon sx={{ fontSize: 36, mr: 1 }} />
+     <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+         DOB: {new Date(pet.birthTime * 1000).toLocaleDateString()}
+     </Typography>
+ </Box>
+ <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
+     <AccessTimeIcon sx={{ fontSize: 36, mr: 1 }} />
+     <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+         Last Interaction: {new Date(pet.lastInteraction * 1000).toLocaleString()}
+     </Typography>
+ </Box>
+ 
+ <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium', mt: 4 }} variant="h2">
+     Stats
+ </Typography>
+<Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2 }}>
+     <EqualizerIcon sx={{ fontSize: 36, mr: 1 }} />
+     <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+         Level: {pet.level} | XP: {pet.xp} | Element: {pet.element} | HP: {pet.hp} | Power: {pet.power}
+     </Typography>
+ </Box>
+ 
+ <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium', mt: 4 }} variant="h3">
+     Needs
+ </Typography>
+ <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2 }}>
+     <SentimentSatisfiedAltIcon sx={{ fontSize: 36, mr: 1 }} />
+     <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+         Happiness: {pet.happiness} <MoodIcon sx={{ fontSize: 16, mb: -1, ml: 1 }} />
+     </Typography>
+ </Box>
+ <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>
+     <RestaurantIcon sx={{ fontSize: 36, mr: 1 }} />
+    <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium' }} variant="subtitle1">
+         Hunger: {pet.hunger} <FastfoodIcon sx={{ fontSize: 16, mb: -1, ml: 1 }} />
+     </Typography>
+ </Box>
