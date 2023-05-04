@@ -1,38 +1,96 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  background-color: #f2f2f2;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.App-header {
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.App-header h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.App-header p {
+  font-size: 1.25rem;
+  color: #777;
+  margin-bottom: 0;
+}
+
+
+/* Styling for Row and Col */
+.my-5 {
+  margin-top: 5rem;
+  margin-bottom: 2.5rem;
+}
+
+
+/* Styling for Header */
+.text-center {
+  text-align: center;
+}
+
+.text-primary-900 {
+  color: #1a202c;
+}
+
+.text-primary-700 {
+  color: #4a5568;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+/* Styling for h1 */
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Styling for p */
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Styling for Routes */
+.text-gray-500 {
+  color: #6b7280;
+}
+
+.mb-5 {
+  margin-bottom: 2.5rem;
+}
+
+.header-section {
+  background-image: linear-gradient(to right, #e6e9f0, #eef1f5);
+  padding: 5rem 0;
+}
+
+@media (max-width: 768px) {
+  .text-4xl {
+    font-size: 1.5rem;
+    line-height: 1.75rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .text-xl {
+    font-size: 1rem;
+    line-height: 1.25rem;
+  }
+
+  .header-section {
+    padding: 3rem 0;
   }
 }
