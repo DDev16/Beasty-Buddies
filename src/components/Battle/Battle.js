@@ -11,7 +11,6 @@ import {
   CircularProgress,
   Snackbar,
 } from "@mui/material";
-import BattleImage from '../Battle/BattleImage.js'
 import nftAbi from "../abi/Tama.json";
 
 
@@ -34,6 +33,8 @@ function Battle() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [tokens, setTokens] = useState([]);
+  const [search, setSearch] = useState("");
+  const [playerItems, setPlayerItems] = useState([]);
 
   useEffect(() => {
     requestAccount();
@@ -63,6 +64,18 @@ function Battle() {
     }
     setLoading(false);
   }
+  function filterTokens(tokens) {
+    return tokens.filter((token) => {
+      const query = search.toLowerCase();
+      return (
+        token.tokenId.toString().includes(query) ||
+        token.name.toLowerCase().includes(query) ||
+        token.level.toString().includes(query) ||
+        token.element.toLowerCase().includes(query)
+      );
+    });
+  }
+  
 
   const getImageUrl = (level, id) => {
     let imageUrl;
@@ -74,6 +87,61 @@ function Battle() {
     return imageUrl;
   };
 
+
+  async function buyShield() {
+    const cost = 100;
+    const effectValue = 20;
+    const useCount = 1;
+    try {
+      await contract.methods.buyShield().send({ from: account, value: cost });
+      playerItems.push({
+        itemType: "Shield",
+        effectValue,
+        isActive: false,
+        useCount,
+      });
+      setSuccess("Shield bought successfully.");
+    } catch (err) {
+      setError("Failed to buy Shield. Please try again later.");
+    }
+  }
+  
+  async function buyPotion() {
+    const cost = 50;
+    const effectValue = 50;
+    const useCount = 1;
+    try {
+      await contract.methods.buyPotion().send({ from: account, value: cost });
+      playerItems.push({
+        itemType: "Potion",
+        effectValue,
+        isActive: false,
+        useCount,
+      });
+      setSuccess("Potion bought successfully.");
+    } catch (err) {
+      setError("Failed to buy Potion. Please try again later.");
+    }
+  }
+  
+  async function buyPowerUp() {
+    const cost = 150;
+    const effectValue = 30;
+    const useCount = 1;
+    try {
+      await contract.methods.buyPowerUp().send({ from: account, value: cost });
+      playerItems.push({
+        itemType: "PowerUp",
+        effectValue,
+        isActive: false,
+        useCount,
+      });
+      setSuccess("PowerUp bought successfully.");
+    } catch (err) {
+      setError("Failed to buy PowerUp. Please try again later.");
+    }
+  }
+  
   async function fetchAllTokens() {
     setLoading(true);
     try {
@@ -162,12 +230,24 @@ return true;
 }
 
 return (
+    <div style={{ position: 'relative', backgroundColor: 'rgba(255, 255, 255, 0.5)', zIndex: 1 }}>
+
 <Container>
 <Box sx={{ mt: 4 }}>
-<Typography variant="h3" component="h1" gutterBottom>
-Pokemon Battle
+<Typography 
+  variant="h3" 
+  component="h1" 
+  align="center"
+  style={{ 
+    color: "#ffffff", 
+    fontWeight: "bold",
+    textShadow: "2px 2px #000000" 
+  }}
+>
+  Buddy Battles
 </Typography>
-<BattleImage/>
+
+
 {account && (
 <Typography variant="h5" component="h2" gutterBottom>
 Account: {account}
@@ -276,10 +356,55 @@ variant="contained"
   </Box>
   <Box sx={{ mt: 4 }}>
   <Typography variant="h4" component="h3" gutterBottom>
-    All Minted Tokens
+    Buy Items
   </Typography>
   <Grid container spacing={2}>
-    {tokens.map((token) => (
+    <Grid item xs={12} sm={4}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => buyShield()}
+        fullWidth
+      >
+        Buy Shield (Cost: 100)
+      </Button>
+    </Grid>
+    <Grid item xs={12} sm={4}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => buyPotion()}
+        fullWidth
+      >
+        Buy Potion (Cost: 50)
+      </Button>
+    </Grid>
+    <Grid item xs={12} sm={4}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => buyPowerUp()}
+        fullWidth
+      >
+        Buy PowerUp (Cost: 150)
+      </Button>
+    </Grid>
+  </Grid>
+</Box>
+  <Box sx={{ mt: 4 }}>
+      <Typography variant="h4" component="h3" gutterBottom>
+        Scout Your Battle
+      </Typography>
+      <Box sx={{ mt: 2 }}>
+        <TextField
+          label="Search Tokens"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          fullWidth
+        />
+      </Box>
+      <Grid container spacing={2}>
+        {filterTokens(tokens).map((token) =>  (
       <Grid item xs={12} sm={6} md={4} key={token.tokenId}>
         <Box>
           <img src={getImageUrl(token.level, token.id)} alt={`Token ${token.tokenId}`} />
@@ -329,6 +454,7 @@ variant="contained"
     message={error || success}
   />
 </Container>
+</div>
 );
 }
 
