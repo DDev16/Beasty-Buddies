@@ -13,7 +13,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import logo from '../Assets/logo.png';
+import logo from '../marketplace/Assets/logo.png';
 import Web3 from 'web3';
 import './NavBar.css'
 
