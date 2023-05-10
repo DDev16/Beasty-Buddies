@@ -10,8 +10,10 @@ import { Spacer } from '@chakra-ui/react';
 import  Battle  from './components/Battle/Battle.js'
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Buddies from './components/Battle/Buddies.js';
-import Marketplace from './components/marketplace/Marketplace.js'
-import Footer from './components/Footer/Footer.js'
+import Marketplace from './components/marketplace/Marketplace.js';
+import Footer from './components/Footer/Footer.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 const theme = createTheme({
   palette: {
     primary: {
