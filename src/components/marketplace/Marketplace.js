@@ -19,6 +19,7 @@ import MuiAlert from '@mui/material/Alert';
 import ShieldImage from '../Assets/shield.png';
 import PotionImage from '../Assets/potion.png';
 import PowerUpImage from '../Assets/powerUp.png';
+import { wordWrap } from "polished";
 
 const ActionButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.main,
@@ -140,9 +141,28 @@ function Marketplace() {
 
     return (
         <Container>
-            <Typography variant="h3" component="h1" gutterBottom align="center">
-                Marketplace
-            </Typography>
+            <Typography 
+    variant="h3" 
+    component="h3" 
+    gutterBottom 
+    align="center"
+    style={{
+        color: '#FFFFFF', // Bright Orange color
+        textShadow: '8px 2px 8px #000000', // Black text shadow for 3D effect
+        fontFamily: 'Arial, sans-serif', // Change the font if needed
+        fontWeight: 'bold', // Make the text bold
+        letterSpacing: '2px', // Increase spacing between letters
+        textTransform: 'uppercase', // Make text uppercase for more impact
+        marginBottom: '20px', // Increase bottom margin
+        backgroundColor: '#0000', // A subtle background color
+        borderRadius: '5px', // Rounded corners
+        padding: '10px' ,// Padding around the text
+        wordWrap:'wordWrap'
+    }}
+>
+    Marketplace
+</Typography>
+
             <Grid container spacing={3}>
                 {Object.keys(ITEM_DATA).map((itemType) => (
                     <Grid item xs={12} sm={6} md={4} key={itemType}>

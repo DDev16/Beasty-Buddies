@@ -1,77 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import Web3 from "web3";
 import abi from "../abi/Battle.json";
 import {
     Box,
-    Button,
     CircularProgress,
     Container,
     Grid,
     Snackbar,
     TextField,
     Typography,
+    useTheme,
 } from '@mui/material';
-import { styled } from '@mui/system';
 import nftAbi from "../abi/Tama.json";
-import { alpha } from '@mui/material/styles';
 // import LeaderBoard from '../leaderboard/leaderboard.js'
+import { Root, Title, ActionButton } from '../Styled/StyledComponents.js';
 
-
-const Root = styled('div')(({ theme }) => ({
-    position: 'relative',
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    zIndex: 1,
-    padding: theme.spacing(4),
-    borderRadius: theme.shape.borderRadius * 2,
-    boxShadow: `0px 4px 6px ${alpha(theme.palette.primary.dark, 0.2)}, 0px 1px 1px ${alpha(theme.palette.primary.dark, 0.14)}, 0px 2px 1px -1px ${alpha(theme.palette.primary.dark, 0.12)}`,
-    backdropFilter: 'blur(4px)',
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-    color: '#ffffff',
-    fontWeight: 'bold',
-    textShadow: '2px 2px #000000',
-    marginBottom: theme.spacing(2),
-    textTransform: 'uppercase',
-    letterSpacing: '2px',
-    fontSize: '2rem',
-    lineHeight: 1.2,
-    [theme.breakpoints.down('sm')]: {
-        fontSize: '1.5rem',
-    },
-}));
-
-const ActionButton = styled(Button)(({ theme }) => ({
-  backgroundColor: theme.palette.secondary.main,
-  color: theme.palette.common.white,
-  fontWeight: theme.typography.fontWeightBold,
-  textTransform: 'uppercase',
-  letterSpacing: '1px',
-  fontSize: '1rem',
-  padding: theme.spacing(1, 3),
-  borderRadius: theme.shape.borderRadius * 2,
-  transition: 'all 0.3s',
-  boxShadow: theme.shadows[3],
-
-  '&:hover': {
-    backgroundColor: theme.palette.secondary.dark,
-    boxShadow: `0px 2px 4px -1px ${alpha(theme.palette.secondary.dark, 0.2)}, 0px 4px 5px 0px ${alpha(theme.palette.secondary.dark, 0.14)}, 0px 1px 10px 0px ${alpha(theme.palette.secondary.dark, 0.12)}`,
-  },
-
-  '&:disabled': {
-    backgroundColor: alpha(theme.palette.secondary.main, 0.4),
-  },
-
-  '&:focus-visible': {
-    outline: `2px solid ${theme.palette.secondary.light}`,
-    outlineOffset: '2px',
-  },
-
-  '&:active': {
-    backgroundColor: theme.palette.secondary.dark,
-    boxShadow: `0px 2px 4px -1px ${alpha(theme.palette.secondary.dark, 0.2)}, 0px 4px 5px 0px ${alpha(theme.palette.secondary.dark, 0.14)}, 0px 1px 10px 0px ${alpha(theme.palette.secondary.dark, 0.12)}`,
-  },
-}));
 
 
 
@@ -87,7 +30,6 @@ function Battle() {
     const [account, setAccount] = useState(null);
     const [attackerTokenId, setAttackerTokenId] = useState("");
     const [defenderTokenId, setDefenderTokenId] = useState("");
-    const [playerWins, setPlayerWins] = useState(0);
     const [battleId, setBattleId] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -98,6 +40,7 @@ function Battle() {
     const [attackerHp, setAttackerHp] = useState(0);
     const [defenderHp, setDefenderHp] = useState(0);
     const [battleLog, setBattleLog] = useState([]);
+    const theme = useTheme(); // add this line to access the theme object
 
     useEffect(() => {
         requestAccount();
@@ -135,26 +78,13 @@ function Battle() {
         try {
             const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
             setAccount(accounts[0]);
-            fetchPlayerWins(accounts[0]);
         } catch (err) {
             setError("Failed to connect to Ethereum. Please make sure you have a compatible wallet installed and try again.");
         }
         setLoading(false);
     }
 
-    async function fetchPlayerWins(playerAddress) {
-        setLoading(true);
-        try {
-            const wins = await contract.methods.playerWins(playerAddress).call();
-            setPlayerWins(wins);
-        } catch (err) {
-            setError("Failed to fetch player wins. Please try again later.");
-        }
-        setLoading(false);
-    }
-    
-
-
+  
     async function fetchAllTokens() {
         setLoading(true);
         try {
@@ -183,6 +113,8 @@ function Battle() {
             setError("Failed to create battle. Please make sure you entered valid Token IDs and try again.");
         }
         setLoading(false);
+        setBattleLog([...battleLog, `Battle Created By ( ${attackerTokenId})!`]);
+
     }
 
     async function handleAttack() {
@@ -253,7 +185,7 @@ function Battle() {
         <Root>
             <Container>
                 <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Title variant="h3" component="h1" align="center">
+                    <Title variant="h1" component="h1" align="center">
                         Buddy Battles
                     </Title>
                     {/* <LeaderBoard/> */}
@@ -278,9 +210,6 @@ function Battle() {
         ))}
     </Box>
 </Box>
-                    <Typography variant="h5" component="h2" gutterBottom>
-                        Player Wins: {playerWins}
-                    </Typography>
                 </Box>
                 <Box component="form" onSubmit={(e) => {
                     e.preventDefault();
@@ -319,105 +248,114 @@ function Battle() {
                             >
                                 {loading ? <CircularProgress size={24} /> : "Create Battle"}
                             </ActionButton>
+                            
+                                
                             <Box
-                                sx={{
-                                    mt: 4,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    flexDirection: 'column',
-                                    gap: 2,
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        mt: 4,
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        flexDirection: 'column',
-                                        gap: 2,
-                                    }}
-                                >
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            gap: 4,
-                                            position: 'relative',
-                                        }}
-                                    >
-                                        {attackerImage && (
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                <img
-                                                    src={attackerImage}
-                                                    alt={`Attacker Token ID: ${attackerTokenId}`}
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '350px',
-                                                        borderRadius: '50%',
-                                                        border: '4px solid #4caf50',
-                                                    }}
-                                                />
-                                                <Typography variant="h6" component="h4">
-                                                    Attacker
-                                                </Typography>
-                                                <Typography variant="body1" component="p">
-                                                    HP: {attackerHp}
-                                                </Typography>
-                                            </Box>
-                                        )}
-                                        <Typography
-                                            variant="h2"
-                                            component="h3"
-                                            gutterBottom
-                                            sx={{
-                                                background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                                                borderRadius: 3,
-                                                border: 0,
-                                                color: 'white',
-                                                padding: '0 30px',
-                                                boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-                                            }}
-                                        >
-                                            VS
-                                        </Typography>
-                                        {defenderImage && (
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                <img
-                                                    src={defenderImage}
-                                                    alt={`Defender Token ID: ${defenderTokenId}`}
-                                                    style={{
-                                                        width: '350px',
-                                                        height: '350px',
-                                                        borderRadius: '50%',
-                                                        border: '4px solid #f44336',
-                                                    }}
-                                                />
-                                                <Typography variant="h6" component="h4">
-                                                    Defender
-                                                </Typography>
-                                                <Typography variant="body1" component="p">
-                                                    HP: {defenderHp}
-                                                </Typography>
-                                            </Box>
-                                        )}
-                                    </Box>
-                                </Box>
-                            </Box>
+  sx={{
+    display: 'flex',
+    flexDirection: ['column', 'row', 'row'],
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: [3, 4, 4],
+    position: 'relative',
+    maxWidth: '100%',
+  }}
+>
+  {attackerImage && (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        mb: [3, 0, 0],
+      }}
+    >
+      <img
+        src={attackerImage}
+        alt={`Image of the attacking token with ID ${attackerTokenId}`}
+        style={{
+          width: ['200px', '350px', '350px'],
+          height: ['200px', '350px', '350px'],
+          borderRadius: '50%',
+          border: `4px solid ${theme.palette.success.main}`,
+          objectFit: 'cover',
+          transition: 'border-color 0.3s ease-in-out',
+        }}
+      />
+      <Typography
+        variant={['subtitle2', 'h6', 'h6']}
+        component="h4"
+        sx={{ mt: 1 }}
+      >
+        Attacker
+      </Typography>
+      <Typography
+        variant={['body2', 'body1', 'body1']}
+        component="p"
+        sx={{ fontFamily: 'monospace' }}
+      >
+        HP: {attackerHp}
+      </Typography>
+    </Box>
+  )}
+  <Typography
+    variant={['h4', 'h2', 'h2']}
+    component="h3"
+    gutterBottom
+    sx={{
+      background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+      borderRadius: 3,
+      border: 0,
+      color: 'white',
+      padding: ['10px 20px', '0 30px', '0 30px'],
+      boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+      textShadow: '2px 2px #333',
+      fontSize: ['3rem', '4rem', '5rem'],
+      minWidth: '100px',
+      textAlign: 'center',
+    }}
+  >
+    VS
+  </Typography>
+  {defenderImage && (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        mt: [3, 0, 0],
+      }}
+    >
+      <img
+        src={defenderImage}
+        alt={`Image of the defending token with ID ${defenderTokenId}`}
+        style={{
+          width: ['200px', '350px', '350px'],
+          height: ['200px', '350px', '350px'],
+          borderRadius: '50%',
+          border: `4px solid ${theme.palette.error.main}`,
+          objectFit: 'cover',
+transition: 'border-color 0.3s ease-in-out',
+}}
+/>
+<Typography
+variant={['subtitle2', 'h6', 'h6']}
+component="h4"
+sx={{ mt: 1 }}
+>
+Defender
+</Typography>
+<Typography
+variant={['body2', 'body1', 'body1']}
+component="p"
+sx={{ fontFamily: 'monospace' }}
+>
+HP: {defenderHp}
+</Typography>
+</Box>
+)}
+</Box>
+                            
                         </Grid>
                     </Grid>
                 </Box>
@@ -481,43 +419,6 @@ function Battle() {
                         </Grid>
                     </Grid>
                 </Box>
-                {/* <Box sx={{ mt: 4 }}>
-                    <Typography variant="h4" component="h3" gutterBottom>
-                        Buy Items
-                    </Typography>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={4}>
-                            <ActionButton
-                                variant="contained"
-                                color="primary"
-                                onClick={() => buyShield()}
-                                fullWidth
-                            >
-                                Buy Shield (Cost: 100)
-                            </ActionButton>
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <ActionButton
-                                variant="contained"
-                                color="primary"
-                                onClick={() => buyPotion()}
-                                fullWidth
-                            >
-                                Buy Potion (Cost: 50)
-                            </ActionButton>
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <ActionButton
-                                variant="contained"
-                                color="primary"
-                                onClick={() => buyPowerUp()}
-                                fullWidth
-                            >
-                                Buy PowerUp (Cost: 150)
-                            </ActionButton>
-                        </Grid>
-                    </Grid>
-                </Box> */}
                 <Snackbar
                     open={!!error || !!success}
                     autoHideDuration={6000}

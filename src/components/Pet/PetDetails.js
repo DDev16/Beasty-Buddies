@@ -254,6 +254,18 @@ const PetDetails = () => {
 <Typography sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'medium', mt: 1 }} variant="subtitle1">
       Pet Details
  </Typography>
+  {/* Add the token ID to the container */}
+  <Typography
+          variant="subtitle1"
+          sx={{
+            fontFamily: 'Montserrat, sans-serif',
+            fontWeight: 'medium',
+            mt: 1,
+            textAlign: 'center'
+          }}
+        >
+          Token ID: {pet.tokenId}
+        </Typography>
   <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2 }}>      
  </Box>
  <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 1 }}>

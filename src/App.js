@@ -11,7 +11,7 @@ import  Battle  from './components/Battle/Battle.js'
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Buddies from './components/Battle/Buddies.js';
 import Marketplace from './components/marketplace/Marketplace.js'
-
+import Footer from './components/Footer/Footer.js'
 const theme = createTheme({
   palette: {
     primary: {
@@ -78,22 +78,29 @@ function App() {
   </Col>
           <Row className="my-5">
             <Col md={{ span: 8, offset: 2 }}>
+            <ThemeProvider theme={theme}>
+
               <Routes>
+
                 <Route path="/" element={<Mint />} />
+                <Route path="/petdetails" element={<PetDetails />} />
+          <Route path="/battle" element={<Battle />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/buddies" element={<Buddies />} />
                 {/* Add more routes here as needed */}
+
               </Routes>
+              </ThemeProvider>
+
             </Col>
           </Row>
-          <PetDetails/>
+        
           
         </Container>
         
       </Router>
-      <ThemeProvider theme={theme}>
-      <Battle/>
-      <Marketplace/>
-      <Buddies/>
-          </ThemeProvider>
+    
+          <Footer/>
 
     </div>
     
