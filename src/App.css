@@ -188,7 +188,7 @@ h1 {
 
 .py-8 {
   position: relative;
-  background: linear-gradient(90deg, rgba(107,70,193,0.8) 0%, rgba(195,77,205,0.8) 100%);
+  /* background: linear-gradient(90deg, rgba(107,70,193,0.8) 0%, rgba(195,77,205,0.8) 100%); */
   z-index: 1;
   padding: 1rem;
 }

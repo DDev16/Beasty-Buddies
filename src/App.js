@@ -9,6 +9,8 @@ import SliderComponent from './components/Slider.js';
 import { Spacer } from '@chakra-ui/react';
 import  Battle  from './components/Battle/Battle.js'
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Buddies from './components/Battle/Buddies.js';
+import Marketplace from './components/marketplace/Marketplace.js'
 
 const theme = createTheme({
   palette: {
@@ -40,7 +42,6 @@ function App() {
         <Container>
   <Col md={{ span: 8, offset: 2 }}>
     <header className="text-center">
-    <div className="bg-gradient-to-r from-pink-500 to-purple-500">
     <h1 className="text-5xl md:text-7xl font-bold text-white mb-4" style={{textShadow: "2px 2px 4px #000000", fontFamily: "Montserrat"}}>
   <span className="animate-pulse">Beasty</span> 
   <span className="animate-pulse md:text-6xl" style={{color: "#00FFFF"}}>Battle</span> 
@@ -49,7 +50,7 @@ function App() {
   <span className="animate-bounce text-3xl md:text-5xl" style={{color: "#FFD700"}}>NFT</span>
 </h1>
 
-</div>
+
 
 <div className="text-center py-8">
 <h2 className="text-4xl font-bold text-primary-900 mb-4 animate-pulse" style={{textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3), -webkit-text-stroke: 1px #fff", fontFamily: "'Roboto', sans-serif", color: "#f75f00", background: "linear-gradient(45deg, #f75f00, #ffc107)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent"}}>
@@ -90,6 +91,8 @@ function App() {
       </Router>
       <ThemeProvider theme={theme}>
       <Battle/>
+      <Marketplace/>
+      <Buddies/>
           </ThemeProvider>
 
     </div>
