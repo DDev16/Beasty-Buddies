@@ -7,10 +7,10 @@ import Image from '../marketplace/Assets/logo.png'
 
 const routes = [
   { name: 'Home', path: '/' },
-  { name: 'Pet Details', path: '/petdetails' },
+  { name: 'Your Buddies', path: '/petdetails' },
   { name: 'Battle', path: '/battle' },
   { name: 'Marketplace', path: '/marketplace' },
-  { name: 'Buddies', path: '/buddies' },
+  { name: 'Scout Battle Buddies', path: '/buddies' },
 ];
 
 function NavBar() {

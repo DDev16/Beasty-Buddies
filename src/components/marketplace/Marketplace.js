@@ -99,7 +99,7 @@ const ITEM_DATA = {
 };
 
 
-const contractAddress = "0xA7918D253764E42d60C3ce2010a34d5a1e7C1398";
+const contractAddress = "0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf";
 contract = new web3.eth.Contract(abi, contractAddress);
 
 function Marketplace() {

@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+.title {
+  font-family: 'Pacifico', cursive;
+  font-size: 48px;
+  text-transform: uppercase;
+  color: #4a4a4a;
+  text-shadow: 2px 2px 0px #FDB813, 4px 4px 0px rgba(0, 0, 0, 0.15);
+  margin-bottom: 30px;
+  position: relative;
+  animation: titlePop 1s ease;
+}
+
+@keyframes titlePop {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

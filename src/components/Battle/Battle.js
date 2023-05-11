@@ -10,21 +10,22 @@ import {
     TextField,
     Typography,
     useTheme,
+    Button,
+
 } from '@mui/material';
-import nftAbi from "../abi/Tama.json";
 // import LeaderBoard from '../leaderboard/leaderboard.js'
 import { Root, Title, ActionButton } from '../Styled/StyledComponents.js';
+import '../Battle/Battle.css'
 
 
 
 
 const web3 = new Web3(window.ethereum);
 
-const contractAddress = "0xA7918D253764E42d60C3ce2010a34d5a1e7C1398";
+const contractAddress = "0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf";
 const contract = new web3.eth.Contract(abi, contractAddress);
 
-const nftContractAddress = "0x2910E325cf29dd912E3476B61ef12F49cb931096";
-const nftContract = new web3.eth.Contract(nftAbi, nftContractAddress);
+
 
 function Battle() {
     const [account, setAccount] = useState(null);
@@ -41,29 +42,69 @@ function Battle() {
     const [defenderHp, setDefenderHp] = useState(0);
     const [battleLog, setBattleLog] = useState([]);
     const theme = useTheme(); // add this line to access the theme object
+    const [log, setLog] = useState([]);
+    const [userTokenId, setUserTokenId] = useState("");
+    const [isConnected, setIsConnected] = useState(false);
+
 
     useEffect(() => {
+        if (contract) {
+            contract.events.NewBattle({}, (error, event) => {
+                if (error) {
+                    console.error('Error on NewBattle event', error);
+                } else {
+                    if (event.returnValues.defenderTokenId === userTokenId) {
+                        alert(`You are now in a battle! Battle ID: ${event.returnValues.battleId}`);
+                    }
+                }
+            });
+        }
+    }, [contract, userTokenId]);
+    
+    useEffect(() => {
         requestAccount();
-        fetchAllTokens();
     }, []);
 
     useEffect(() => {
         fetchImages();
-        fetchHp();
     }, [attackerTokenId, defenderTokenId]);
 
-    const fetchHp = async () => {
-        if (attackerTokenId && defenderTokenId) {
-            try {
-                const attackerHp = await nftContract.methods.getHp(attackerTokenId).call();
-                const defenderHp = await nftContract.methods.getHp(defenderTokenId).call();
-                setAttackerHp(attackerHp);
-                setDefenderHp(defenderHp);
-            } catch (err) {
-                console.error("Failed to fetch HP for attacker and defender", err);
-            }
+   
+
+    
+
+    contract.events.BattleEnded({}, (error, event) => {
+        if (error) {
+            console.error(error);
+        } else {
+            setLog([...log, `Battle ${event.returnValues.battleId} ended. Winner: ${event.returnValues.winnerTokenId}`]);
         }
-    };
+    });
+    
+    contract.events.CriticalHit({}, (error, event) => {
+        if (error) {
+            console.error(error);
+        } else {
+            setLog([...log, `Critical hit in battle ${event.returnValues.battleId}. Attacker: ${event.returnValues.attackerTokenId}`]);
+        }
+    });
+    
+    contract.events.CriticalMiss({}, (error, event) => {
+        if (error) {
+            console.error(error);
+        } else {
+            setLog([...log, `Critical miss in battle ${event.returnValues.battleId}. Attacker: ${event.returnValues.attackerTokenId}`]);
+        }
+    });
+    
+    contract.events.ItemUsed({}, (error, event) => {
+        if (error) {
+            console.error(error);
+        } else {
+            setLog([...log, `Item used in battle ${event.returnValues.battleId}. Type: ${event.returnValues.itemType}. User: ${event.returnValues.user}`]);
+        }
+    });
+    
 
     const fetchImages = async () => {
         if (attackerTokenId && defenderTokenId) {
@@ -78,29 +119,15 @@ function Battle() {
         try {
             const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
             setAccount(accounts[0]);
+            setIsConnected(true);
         } catch (err) {
             setError("Failed to connect to Ethereum. Please make sure you have a compatible wallet installed and try again.");
         }
         setLoading(false);
     }
+    
 
-  
-    async function fetchAllTokens() {
-        setLoading(true);
-        try {
-            const totalSupply = await nftContract.methods.totalSupply().call();
-            const tokens = [];
-            for (let tokenId = 1; tokenId <= totalSupply; tokenId++) {
-                const petDetails = await nftContract.methods.getPetDetails(tokenId).call();
-                tokens.push({ tokenId, ...petDetails });
-            }
-            setTokens(tokens);
-        } catch (err) {
-            setError("Failed to fetch tokens. Please try again later.");
-        }
-        setLoading(false);
-    }
-
+    
 
     async function createBattle() {
         setLoading(true);
@@ -112,9 +139,14 @@ function Battle() {
         } catch (err) {
             setError("Failed to create battle. Please make sure you entered valid Token IDs and try again.");
         }
+
+        if (defenderTokenId === userTokenId) {
+            alert(`You are now in a battle! Battle ID: ${battleId}`);
+          }
+
         setLoading(false);
         setBattleLog([...battleLog, `Battle Created By ( ${attackerTokenId})!`]);
-
+        
     }
 
     async function handleAttack() {
@@ -184,15 +216,57 @@ function Battle() {
     return (
         <Root>
             <Container>
+            <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    {isConnected ? (
+        <Typography variant="h6">Connected: {account}</Typography>
+    ) : (
+        <Button 
+    variant="contained" 
+    color="primary" 
+    onClick={requestAccount}
+    sx={{ 
+        mt: 4, 
+        mb: 2, 
+        px: 4, 
+        py: 2, 
+        fontWeight: 'bold', 
+        borderRadius: 20, 
+        textTransform: 'none' 
+    }}
+>
+    {loading ? <CircularProgress size={24} /> : "Connect"}
+</Button>
+    )}
+</Box>
+
                 <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Title variant="h1" component="h1" align="center">
+                    <Title className= "title" variant="h1" component="h1" align="center">
                         Buddy Battles
                     </Title>
                     {/* <LeaderBoard/> */}
                     <Box sx={{ mt: 4 }}>
+                    <Box sx={{ mt: 4 }}>
     <Typography variant="h4" component="h3" gutterBottom>
         Battle Log
     </Typography>
+    <Box
+        sx={{
+            maxHeight: '200px',
+            overflowY: 'auto',
+            backgroundColor: '#f0f0f0',
+            padding: 2,
+            borderRadius: 2,
+            boxShadow: 1
+        }}
+    >
+        {log.map((message, index) => (
+            <Typography key={index} variant="body1">
+                {message}
+            </Typography>
+        ))}
+    </Box>
+</Box>
+
     <Box
         sx={{
             maxHeight: '200px',
@@ -274,11 +348,11 @@ function Battle() {
         src={attackerImage}
         alt={`Image of the attacking token with ID ${attackerTokenId}`}
         style={{
-          width: ['200px', '350px', '350px'],
-          height: ['200px', '350px', '350px'],
+          width: "300px", 
+          height: '350px',
           borderRadius: '50%',
-          border: `4px solid ${theme.palette.success.main}`,
           objectFit: 'cover',
+          border: `4px solid ${theme.palette.error.main}`,
           transition: 'border-color 0.3s ease-in-out',
         }}
       />
@@ -330,8 +404,8 @@ function Battle() {
         src={defenderImage}
         alt={`Image of the defending token with ID ${defenderTokenId}`}
         style={{
-          width: ['200px', '350px', '350px'],
-          height: ['200px', '350px', '350px'],
+          width: '300px',
+          height: '300px',
           borderRadius: '50%',
           border: `4px solid ${theme.palette.error.main}`,
           objectFit: 'cover',
