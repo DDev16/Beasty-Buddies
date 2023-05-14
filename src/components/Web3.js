@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import EventTicketingABI from './abi/Tama.json'; // Import ABI or define it as a constant
 
-const contractAddress = '0x2910E325cf29dd912E3476B61ef12F49cb931096';
+const contractAddress = '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9';
 const cost = 0; // Define the cost per pet here (in Ether)
 
 let web3;

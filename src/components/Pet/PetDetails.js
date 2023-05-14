@@ -87,7 +87,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 
 
-const contractAddress = '0x2910E325cf29dd912E3476B61ef12F49cb931096';
+const contractAddress = '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9';
 
 const PetDetails = () => {
   const [newName, setNewName] = useState('');

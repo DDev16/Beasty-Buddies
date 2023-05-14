@@ -22,7 +22,7 @@ import '../Battle/Battle.css'
 
 const web3 = new Web3(window.ethereum);
 
-const contractAddress = "0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf";
+const contractAddress = "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44";
 const contract = new web3.eth.Contract(abi, contractAddress);
 
 
@@ -45,23 +45,72 @@ function Battle() {
     const [log, setLog] = useState([]);
     const [userTokenId, setUserTokenId] = useState("");
     const [isConnected, setIsConnected] = useState(false);
+    const [battles, setBattles] = useState([]);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+const [snackbarMessage, setSnackbarMessage] = useState("");
 
-
-    useEffect(() => {
-        if (contract) {
-            contract.events.NewBattle({}, (error, event) => {
-                if (error) {
-                    console.error('Error on NewBattle event', error);
-                } else {
-                    if (event.returnValues.defenderTokenId === userTokenId) {
-                        alert(`You are now in a battle! Battle ID: ${event.returnValues.battleId}`);
-                    }
+useEffect(() => {
+    if (contract && account) {
+        const newBattleEventListener = contract.events.NewBattle({}, async (error, event) => {
+            if (error) {
+                console.error('Error on NewBattle event', error);
+            } else {
+                const defenderOwner = await contract.methods.ownerOf(event.returnValues.defenderTokenId).call();
+                const attackerOwner = await contract.methods.ownerOf(event.returnValues.attackerTokenId).call();
+                if (defenderOwner.toLowerCase() === account.toLowerCase() || attackerOwner.toLowerCase() === account.toLowerCase()) {
+                    setBattles(battles => [...battles, event.returnValues.battleId]);
+                    setSnackbarMessage(`You are now in a battle! Battle ID: ${event.returnValues.battleId}`);
+                    setOpenSnackbar(true);
                 }
-            });
-        }
-    }, [contract, userTokenId]);
+            }
+        });
+
+        return () => newBattleEventListener.unsubscribe();
+    }
+}, [contract, account]);
+
+
     
+
     useEffect(() => {
+        async function getAccount() {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            setAccount(accounts[0]);
+        }
+    
+        getAccount();
+    
+        window.ethereum.on('accountsChanged', function (accounts) {
+            setAccount(accounts[0]);
+        });
+    }, []);
+    
+
+    async function createBattle() {
+        setLoading(true);
+        try {
+            await contract.methods
+                .createBattle(parseInt(attackerTokenId), parseInt(defenderTokenId))
+                .send({ from: account })
+                .on('transactionHash', (hash) => {
+                    web3.eth.getTransactionReceipt(hash, (error, receipt) => {
+                        if (error) {
+                            console.error('Error in transactionReceipt', error);
+                        } else {
+                            console.log('Receipt', receipt);
+                        }
+                    });
+                });
+            setBattleLog([...battleLog, `Battle Created By ( ${attackerTokenId})!`]);
+        } catch (err) {
+            setError("Failed to create battle. Please make sure you entered valid Token IDs and try again.");
+        } finally {
+            setLoading(false);
+        }
+    }
+    
+    
+        useEffect(() => {
         requestAccount();
     }, []);
 
@@ -127,27 +176,7 @@ function Battle() {
     }
     
 
-    
 
-    async function createBattle() {
-        setLoading(true);
-        try {
-            await contract.methods
-                .createBattle(parseInt(attackerTokenId), parseInt(defenderTokenId))
-                .send({ from: account });
-            setSuccess("Battle created successfully.");
-        } catch (err) {
-            setError("Failed to create battle. Please make sure you entered valid Token IDs and try again.");
-        }
-
-        if (defenderTokenId === userTokenId) {
-            alert(`You are now in a battle! Battle ID: ${battleId}`);
-          }
-
-        setLoading(false);
-        setBattleLog([...battleLog, `Battle Created By ( ${attackerTokenId})!`]);
-        
-    }
 
     async function handleAttack() {
         setLoading(true);
@@ -243,6 +272,20 @@ function Battle() {
                     <Title className= "title" variant="h1" component="h1" align="center">
                         Buddy Battles
                     </Title>
+                    <Snackbar
+    open={openSnackbar}
+    autoHideDuration={6000}
+    onClose={() => setOpenSnackbar(false)}
+    message={snackbarMessage}
+    action={
+        <React.Fragment>
+            <Button color="secondary" size="small" onClick={() => setOpenSnackbar(false)}>
+                CLOSE
+            </Button>
+        </React.Fragment>
+    }
+/>
+
                     {/* <LeaderBoard/> */}
                     <Box sx={{ mt: 4 }}>
                     <Box sx={{ mt: 4 }}>

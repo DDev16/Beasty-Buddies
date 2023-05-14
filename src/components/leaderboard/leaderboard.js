@@ -29,7 +29,7 @@ const Leaderboard = () => {
         const loadBlockchainData = async () => {
             const web3 = new Web3(Web3.givenProvider || "http://localhost:8545"); // Use givenProvider if exists otherwise localhost
             const accounts = await web3.eth.getAccounts();
-            const battleContract = new web3.eth.Contract(abi, "0x70e0bA845a1A0F2DA3359C97E0285013525FFC49"); // Replace "YourContractAddress" with your deployed contract address
+            const battleContract = new web3.eth.Contract(abi, "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"); // Replace "YourContractAddress" with your deployed contract address
 
             let leaderboard = [];
             for (let i = 0; i < accounts.length; i++) {
